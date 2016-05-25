@@ -187,8 +187,9 @@ AC.prototype.mount = function mount() {
   window.addEventListener('click', this.clickHandler);
   window.addEventListener('resize', this.resizeHandler);
 
-  this.position();
-  this.render();
+  this.position()
+  this.requestMatch()
+  this.render()
   this.isMounted = true;
 
   if (Math.max(document.documentElement.clientWidth,
@@ -367,6 +368,9 @@ AC.prototype.trigger = function trigger() {
  * will be updated. Otherwise the UI will be left unmodified.
  */
 AC.prototype.requestMatch = function request() {
+  this.value = this.inputEl.value;
+  this.results = []
+
   if (this.requestFn) {
     this.requestFn(this.value);
     return;
@@ -374,7 +378,7 @@ AC.prototype.requestMatch = function request() {
 
   this.abortPendingRequest();
 
-  if (!this.value) {
+  if (!this.value || this.value === '') {
     this.results = [];
     this.selectedIndex = -1;
     return;
@@ -395,6 +399,7 @@ AC.prototype.requestMatch = function request() {
     }
 
     this.render();
+    this.setSelectedIndex(0);
   }.bind(this);
 
   ajax.send();
