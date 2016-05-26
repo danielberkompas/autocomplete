@@ -301,7 +301,7 @@ AC.prototype.setSelectedIndex = function select(i) {
     this.rows[this.selectedIndex].className = AC.CLASS.ROW;
   }
 
-  this.rows[i].className = AC.CLASS.SELECTED_ROW;
+  this.rows[i].className += ' ' + AC.CLASS.SELECTED_ROW;
   this.selectedIndex = i;
 
   if (this.isRightArrowComplete) {
@@ -381,6 +381,7 @@ AC.prototype.requestMatch = function request() {
   if (!this.value || this.value === '') {
     this.results = [];
     this.selectedIndex = -1;
+    this.render();
     return;
   }
 
