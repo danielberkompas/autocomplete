@@ -192,12 +192,14 @@ AC.prototype.mount = function mount() {
   this.render()
   this.isMounted = true;
 
-  if (Math.max(document.documentElement.clientWidth,
-      window.innerWidth || 0) < 500) {
-    setTimeout(function top() {
-      this.inputEl.scrollIntoView();
-    }.bind(this), 1);
-  }
+  // Commenting out this mobile specific code since it is uncessary for our
+  // use case.
+  // if (Math.max(document.documentElement.clientWidth,
+  //     window.innerWidth || 0) < 500) {
+  //   setTimeout(function top() {
+  //     this.inputEl.scrollIntoView();
+  //   }.bind(this), 1);
+  // }
 };
 
 /** Unmounts the autocomplete. */
