@@ -245,13 +245,6 @@ AC.prototype.keydown = function keydown(e) {
     case AC.KEYCODE.DOWN:
       this.setSelectedIndex(this.selectedIndex + 1);
       break;
-    case AC.KEYCODE.RIGHT:
-      if (this.selectedIndex > -1) {
-        this.inputEl.value =
-            this.results[this.selectedIndex][this.primaryTextKey];
-        this.isRightArrowComplete = true;
-      }
-      break;
     case AC.KEYCODE.ENTER:
       if (this.selectedIndex > -1) {
         this.trigger();
