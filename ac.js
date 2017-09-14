@@ -138,6 +138,7 @@ var AC = function init(inputEl, urlFn, requestFn, resultFn, rowFn, triggerFn) {
 
 AC.KEYCODE = {
   ENTER: 13,
+  TAB: 9,
   ESC: 27,
   LEFT: 37,
   UP: 38,
@@ -232,8 +233,8 @@ AC.prototype.position = function position() {
  * If the up key is pressed, selects the previous result. If the down key is
  * pressed, selects the next result. If the right key is pressed, completes
  * the current result. If the enter key is pressed, triggers action with the
- * current result. If the escape key is pressed, the input is blurred and the
- * autocomplete is hidden.
+ * current result. If the escape key is pressed, the input is cleared and the
+ * autocomplete refreshed.
  *
  * @param {Event} e The keydown event.
  */
@@ -245,14 +246,16 @@ AC.prototype.keydown = function keydown(e) {
     case AC.KEYCODE.DOWN:
       this.setSelectedIndex(this.selectedIndex + 1);
       break;
+    case AC.KEYCODE.TAB:
+    //fallthrough to enter case
     case AC.KEYCODE.ENTER:
       if (this.selectedIndex > -1) {
         this.trigger();
       }
       break;
     case AC.KEYCODE.ESC:
-      this.inputEl.blur();
-      this.unmount();
+      this.inputEl.value = '';
+      this.requestMatch()
       break;
     default:
       break;
@@ -317,7 +320,7 @@ AC.prototype.setSelectedIndex = function select(i) {
 AC.prototype.click = function click(e) {
   var target = e.target || e.srcElement;
   var parent = target;
-  var rowid = -1;
+  var rowid = this.selectedIndex;
 
   while (parent) {
     if (parent === this.inputEl || parent === this.el) {
@@ -460,12 +463,12 @@ AC.prototype.createRow = function create(i) {
 
   var primary = AC.createEl('span', AC.CLASS.PRIMARY_SPAN);
   primary.appendChild(AC.createMatchTextEls(this.value,
-      data[this.primaryTextKey]));
+    data[this.primaryTextKey]));
   el.appendChild(primary);
 
   if (data[this.secondaryTextKey]) {
     el.appendChild(AC.createEl('span',
-        AC.CLASS.SECONDARY_SPAN, data[this.secondaryTextKey]));
+      AC.CLASS.SECONDARY_SPAN, data[this.secondaryTextKey]));
   }
 
   return el;
@@ -494,14 +497,14 @@ AC.createMatchTextEls = function match(input, complete) {
   if (index === 0) {
     fragment.appendChild(AC.createEl('b', null, complete.substring(0, len)));
     fragment.appendChild(AC.createEl('span', null,
-        complete.substring(len, complete.length)));
+      complete.substring(len, complete.length)));
   } else if (index > 0) {
     fragment.appendChild(AC.createEl('span', null,
-        complete.substring(0, index)));
+      complete.substring(0, index)));
     fragment.appendChild(AC.createEl('b', null,
-        complete.substring(index, index + len)));
+      complete.substring(index, index + len)));
     fragment.appendChild(AC.createEl('span', null,
-        complete.substring(index + len, complete.length)));
+      complete.substring(index + len, complete.length)));
   } else {
     fragment.appendChild(AC.createEl('span', null, complete));
   }
@@ -542,7 +545,7 @@ AC.findPosition = function position(el) {
   var r = el.getBoundingClientRect();
   var top = r.top + window.pageYOffset || document.documentElement.scrollTop;
   var left = r.left + window.pageXOffset || document.documentElement.scrollLeft;
-  return {left: left, top: top};
+  return { left: left, top: top };
 };
 
 /**
