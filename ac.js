@@ -255,7 +255,7 @@ AC.prototype.keydown = function keydown(e) {
       break;
     case AC.KEYCODE.ESC:
       this.inputEl.value = '';
-      this.requestMatch()
+      this.requestMatch();
       break;
     default:
       break;
